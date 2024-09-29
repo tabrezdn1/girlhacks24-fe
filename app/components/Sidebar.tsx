@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { NavArrowLeft } from 'iconoir-react'
 import { cn } from '@/app/lib/utils'
 import { DropDownMenu } from './DropDownMenu'
-import { Home, Search } from 'iconoir-react'
+import { Home, Search, GraphUp } from 'iconoir-react'
 import { usePathname } from 'next/navigation'
 import ThemeToggle from './ThemeToggle'
 import useModal from '../hooks/useModal'
@@ -73,6 +73,20 @@ console.log(`the email is ${email}}`)
               </button>
             </li>
             <ListOfPlaylist />
+            <p></p>
+            <li className="sidebar-listItem flex items-center opacity-0 py-2 relative -translate-x-4">
+            <a
+              href="https://dashboard-discofy-us.streamlit.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn('w-full p-5 rounded inline-flex items-center', {
+                'bg-[#f5f4fd] dark:bg-[#383838]': router === ''
+              })}
+            >
+              <GraphUp className="w-5 h-5 inline-block mr-2 flex-shrink-0 sidebar-listIcon text-lg " />
+              <span className="sidebar-listItemText">Analytics</span>
+            </a>
+            </li>
           </ul>
           <DropDownMenu email={email}/>
         </div>
