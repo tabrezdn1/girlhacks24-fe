@@ -1,12 +1,19 @@
-import GrainyFilter from './components/GrainyFilter'
-import Navbar from './components/Navbar'
-import Link from 'next/link'
-import { MusicNoteAdd } from 'iconoir-react'
+import GrainyFilter from "./components/GrainyFilter";
+import Navbar from "./components/Navbar";
+import Link from "next/link";
+import { MusicNoteAdd } from "iconoir-react";
+import { getSession } from "@auth0/nextjs-auth0";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+  console.log(
+    session ? `returned data ${session.user.email}` : "Session is not defined"
+  );
+
+  const email = session?.user.email ? session?.user.email : null;
   return (
     <>
-      <Navbar />
+      <Navbar email={email} />
       <div className="grid place-items-center h-screen overflow-hidden items-center w-full before:bg-[#8c8c8c] loginBody">
         <div className="blur-[150px] absolute -top-[50px] -left-[300px] w-full h-full overflow-hidden -z-20">
           <div className="gradient absolute rounded-[100%] blob gradient-1 w-[700px] h-[700px] opacity-30 left-[60%] top-[40%] -z-20 bg-[#FF0080]" />
@@ -19,7 +26,8 @@ export default function Home() {
               Get lost in the music 🪩
             </h1>
             <span className="text-xl">
-              - Meet Vibey, get vibified with personal recommendations and start streaming on our web player today.
+              - Meet Vibey, get vibified with personal recommendations and start
+              streaming on our web player today.
             </span>
             <Link
               href="/player"
@@ -33,5 +41,5 @@ export default function Home() {
       </div>
       <GrainyFilter />
     </>
-  )
+  );
 }

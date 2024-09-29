@@ -10,11 +10,13 @@ import { Home, Search } from 'iconoir-react'
 import { usePathname } from 'next/navigation'
 import ThemeToggle from './ThemeToggle'
 import useModal from '../hooks/useModal'
+import { NavProps } from './Navbar'
 
-const Sidebar = () => {
+const Sidebar = ({ email }: NavProps) => {
+
   const { isModalOpen, close, open } = useModal()
   const [isShrinkView, setIsShrinkView] = useState(true)
-
+console.log(`the email is ${email}}`)
   const router = usePathname()
 
   const handleSidebarView = () => {
