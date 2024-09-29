@@ -9,7 +9,7 @@ const teamMembers = [
     name: 'Richa Singh', 
     role: 'MS in CS @ NJIT', 
     image: '/richa.jpeg',
-    skills: ['Python/R', 'Data Analytics', 'Cloud Infra']
+    skills: ['Python/R', 'Data Visualization and Analytics', 'Cloud']
   },
   { 
     id: 2, 
@@ -23,14 +23,14 @@ const teamMembers = [
     name: 'Jonathan Grossman', 
     role: 'MS in DS @ NJIT', 
     image: '/jon.jpeg',
-    skills: ['Agile', 'Scrum', 'JIRA']
+    skills: ['Full Stack Engineer', 'Python', 'Prompt Engineering/LLM']
   },
   { 
     id: 4, 
     name: 'Vishal Khairnar', 
     role: 'MS in CS @ NJIT', 
-    image: '/sarah-brown.jpg',
-    skills: ['SEO', 'Content Strategy', 'Analytics']
+    image: '/vishal.jpeg',
+    skills: ['Cloud', 'Big Data', 'Data Engineer']
   },
 ];
 
