@@ -74,7 +74,7 @@ console.log(`the email is ${email}}`)
             </li>
             <ListOfPlaylist />
           </ul>
-          <DropDownMenu />
+          <DropDownMenu email={email}/>
         </div>
       </div>
     </div>

@@ -6,6 +6,8 @@ import { Play } from 'iconoir-react'
 import { getGreeting } from '../lib/getGreeting'
 import logo from '@/public/girlhack24-icon.png'
 import { MusicNoteAdd } from 'iconoir-react'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 function initDiscoBall() {
   var t = 1;
@@ -69,29 +71,35 @@ function randomNumber(min: number, max: number) {
 }
 
 
-setTimeout( function() { initDiscoBall(); }, 1000);
-// useEffect(() => {
-//   const fetchPlaylists = async () => {
-//     try {
-//       const response = await fetch('https://discofy-app-data01.s3.amazonaws.com/playlist/playlists.json');
-      
-//       if (!response.ok) {
-//         throw new Error(`Error: ${response.status} ${response.statusText}`);
-//       }
-//       const data: any = await response.json();
-//       setState(data);
-//     } catch (err: any) {
-//       console.log(err)
-//     }
-//   };
-//   fetchPlaylists();
-// }, []);
+setTimeout(function () { initDiscoBall(); }, 1000);
+
 
 export default function Player() {
+  const [state, setState] = useState([]);
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        const response = await fetch('https://discofy-app-data01.s3.amazonaws.com/playlist/playlists.json');
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data: any = await response.json();
+        setState(data);
+      } catch (err: any) {
+        console.log(err)
+      }
+    };
+    fetchPlaylists();
+  }, []);
   return (
     <div className="overflow-hidden w-full h-screen dark:bg-[#181818] transition-colors duration-500">
       <div className="container mx-auto flex flex-col gap-8">
-        <h1 className="font-semibold pt-8 text-3xl">Good {getGreeting()}</h1>
+        <h1 className="flex font-medium pt-10 text-3xl">
+          Welcome to Discofy
+          <MusicNoteAdd />
+        </h1>
+
         <div id="discoBallLight"></div>
         <div id="discoBall">
           <div id="discoBallMiddle"></div>
@@ -115,7 +123,7 @@ export default function Player() {
         <div className="flex items-center justify-between gap-8">
           <AlbumVinyl />
           <div className="grid grid-cols-2 grid-rows-2 place-items-center gap-8 h-max w-[800px]">
-            {/* {playlists
+            {state
               .map(playlist => (
                 <div
                   key={playlist.id}
@@ -132,11 +140,19 @@ export default function Player() {
                     <h1 className="font-medium">{playlist.name}</h1>
                   </div>
                   <button className="mr-8 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition duration-300">
-                    <Play className="w-8 h-8" />
+                    <Link
+                      href={`/player/playlist/${playlist.id}`}
+                    >
+                      <MusicNoteAdd />
+                    </Link>
+
                   </button>
+                  <div>
+
+                  </div>
                 </div>
               ))
-              .slice(0, 4)} */}
+              .slice(0, 4)}
           </div>
         </div>
       </div>
