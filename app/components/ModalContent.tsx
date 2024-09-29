@@ -185,7 +185,7 @@ export default function ModalContent({
                   className="bg-white dark:bg-black w-full h-full rounded-[10px] customShadowMedium relative p-2"
                 >
                   <YouTube
-                    className="w-full h-64 bg-white dark:bg-black"
+                    className="w-full bg-white dark:bg-black"
                     videoId={
                       DiscofyResponse.recommendations[currentIndex]?.youtube_link
                         ?.split("v=")[1]
@@ -195,8 +195,9 @@ export default function ModalContent({
                     onReady={videoOnReady}
                     onPlay={playVideo}
                   />
-                  <div className="flex flex-row p-2">
+                  <div className="flex flex-row p-2 mt-10">
                     <Spotify
+                      wide
                       link={DiscofyResponse.recommendations[currentIndex]?.spotify_link}
                     />
                   </div>
