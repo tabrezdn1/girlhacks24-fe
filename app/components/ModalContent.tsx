@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import YouTube from "react-youtube";
 import { Spotify } from "react-spotify-embed";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./ui/ui/select";
+import { Button } from "./ui/ui/button";
 
 interface ModalContentProps {
   isModalOpen: boolean;
@@ -32,25 +34,28 @@ interface AIresponse {
   recommendations: Recommendation[];
 }
 
-export default function ModalContent({
-  isModalOpen,
-  close,
-}: ModalContentProps) {
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const ref = useRef<HTMLInputElement>(null);
+const moods = ["Happy", "Sad", "Energetic", "Calm", "Angry"];
+const tempos = ["Slow", "Medium", "Fast"];
+const lyricalFoci = ["Love", "Life", "Party", "Introspective"];
+const energyLevels = ["Low", "Medium", "High"];
 
-  const [DiscofyResponse, setDicsofyResponse] = useState<AIresponse | null>(null);
+export default function ModalContent({ isModalOpen, close }: ModalContentProps) {
+  const [mood, setMood] = useState("");
+  const [tempo, setTempo] = useState("");
+  const [lyricalFocus, setLyricalFocus] = useState("");
+  const [energyLevel, setEnergyLevel] = useState("");
+  const [DiscofyResponse, setDiscofyResponse] = useState<AIresponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAIResponse, setShowAIResponse] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0); // New state for current index
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const getSuggestions = async () => {
     if (isLoading) return;
 
     setIsLoading(true);
     const url = "https://909e-128-235-159-74.ngrok-free.app/process-song";
+    const input = `I am looking for a song that is ${mood} with a ${tempo} tempo, focusing on ${lyricalFocus} lyrics, and has ${energyLevel} energy.`;
     const data = { input };
 
     try {
@@ -68,9 +73,9 @@ export default function ModalContent({
 
       const result: AIresponse = await response.json();
       console.log(`returned result: ${JSON.stringify(result)}`);
-      setDicsofyResponse(result);
+      setDiscofyResponse(result);
       setShowAIResponse(true);
-      setCurrentIndex(0); // Reset index when new data is fetched
+      setCurrentIndex(0);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -82,32 +87,16 @@ export default function ModalContent({
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => setInput(e.target.value), 500);
-  };
-
-  const handleClearInput = () => {
-    setInput("");
-    setDicsofyResponse(null);
+  const handleClear = () => {
+    setMood("");
+    setTempo("");
+    setLyricalFocus("");
+    setEnergyLevel("");
+    setDiscofyResponse(null);
     setShowAIResponse(false);
     setError(null);
-    setCurrentIndex(0); // Reset index when input is cleared
-    if (ref.current) {
-      ref.current.value = "";
-    }
+    setCurrentIndex(0);
   };
-
-  const handleFocus = () => {
-    ref.current?.focus();
-  };
-
-  useEffect(() => {
-    setIsTyping(false);
-
-    if (input !== "") {
-      setIsTyping(true);
-    }
-  }, [input]);
 
   const videoOnReady = (event: any) => {
     event.target.pauseVideo();
@@ -130,53 +119,67 @@ export default function ModalContent({
     <AnimatePresence mode="wait" initial={false}>
       {isModalOpen && (
         <Modal handleClose={close}>
-          <div className="flex flex-col items-center w-full gap-4 z-50">
+          <div className="z-50 flex flex-col items-center w-full gap-4">
             <div className="flex flex-col items-center justify-between gap-8 p-2 w-full rounded-[10px] relative">
               <div className="flex flex-col gap-2">
-                <div className="flex flex-col gap-4">
-                  <h1 className="text-4xl font-bold">Hi, I am DiscoGPT</h1>
-                  <h1 className="text-zinc-100">
-                    I am your personal music assistant. I can help you find the
-                    right music for your mood.
-                  </h1>
-                </div>
+                <h1 className="text-4xl font-bold">Hi, I am DiscoGPT</h1>
+                <h1 className="text-zinc-100">
+                  I am your personal music assistant. I can help you find the right music for your mood.
+                </h1>
               </div>
             </div>
-            <div className="relative w-full">
-              <input
-                autoFocus={true}
-                onChange={handleChange}
-                placeholder="How are you feeling today?"
-                ref={ref}
-                className="w-full h-12 px-3 shadow rounded-[10px] border-2 dark:border-black hover:border-black/40 active:shadow-none focus:border-black/40 hover:bg-gray-100 dark:bg-[#212121] transition duration-300 focus:outline-none input"
-              />
-              <div className="flex items-center absolute right-[10px] top-3">
-                {input !== "" && (
-                  <button
-                    onClick={() => {
-                      handleClearInput();
-                      handleFocus();
-                    }}
-                  >
-                    <Cancel className="text-gray-500" />
-                  </button>
-                )}
-
-                <button
-                  onClick={getSuggestions}
-                  disabled={isLoading}
-                  className={`ml-2 ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                >
-                  <Search className="text-gray-500" />
-                </button>
-              </div>
-
-              
+            <div className="flex flex-row w-full gap-2">
+              <Select onValueChange={setMood} value={mood}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Mood" />
+                </SelectTrigger>
+                <SelectContent>
+                  {moods.map((m) => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={setTempo} value={tempo}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Tempo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tempos.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={setLyricalFocus} value={lyricalFocus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Lyrical Focus" />
+                </SelectTrigger>
+                <SelectContent>
+                  {lyricalFoci.map((lf) => (
+                    <SelectItem key={lf} value={lf}>{lf}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={setEnergyLevel} value={energyLevel}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Energy Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {energyLevels.map((el) => (
+                    <SelectItem key={el} value={el}>{el}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button onClick={getSuggestions} disabled={isLoading || !mood || !tempo || !lyricalFocus || !energyLevel}>
+                <Search className="w-4 h-4 mr-2" />
+                Search
+              </Button>
+              <Button variant="outline" onClick={handleClear}>
+                <Cancel className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
             </div>
             <AnimatePresence mode="wait">
-              {isTyping && showAIResponse && DiscofyResponse && (
+              {showAIResponse && DiscofyResponse && (
                 <motion.div
                   variants={variants}
                   initial="hidden"
@@ -204,7 +207,7 @@ export default function ModalContent({
                   <Cancel
                     onClick={() => {
                       close();
-                      handleClearInput();
+                      handleClear();
                     }}
                     className="absolute cursor-pointer top-4 right-4"
                   />
@@ -217,45 +220,34 @@ export default function ModalContent({
               </div>
             )}
             {showAIResponse && DiscofyResponse && (
-                <>
-                  <h1 className="mt-1 text-zinc-100">
-                    {DiscofyResponse.greeting}
-                  </h1>
-                  <h1 className="text-zinc-100">
-                    Here's a song from {DiscofyResponse.recommendations[currentIndex]?.song_name} by{" "}
-                    {DiscofyResponse.recommendations[currentIndex]?.artist}.
-                  </h1>
-                  <p className="mt-1 text-zinc-400">
-                    Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
-                  </p>
-                  
-                  {/* Navigation Buttons */}
-                  <div className="flex justify-center gap-4 mt-1">
-                    <button
-                      onClick={() => setCurrentIndex((prev) => prev - 1)}
-                      disabled={currentIndex === 0}
-                      className={`px-1 py-1 rounded ${
-                        currentIndex === 0
-                          ? "bg-gray-300 cursor-not-allowed"
-                          : "bg-blue-500 text-white hover:bg-blue-600"
-                      }`}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => setCurrentIndex((prev) => prev + 1)}
-                      disabled={currentIndex === DiscofyResponse.recommendations.length - 1}
-                      className={`px-1 py-1 rounded ${
-                        currentIndex === DiscofyResponse.recommendations.length - 1
-                          ? "bg-gray-300 cursor-not-allowed"
-                          : "bg-blue-500 text-white hover:bg-blue-600"
-                      }`}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </>
-              )}
+              <>
+                <h1 className="mt-1 text-zinc-100">
+                  {DiscofyResponse.greeting}
+                </h1>
+                <h1 className="text-zinc-100">
+                  Here's a song from {DiscofyResponse.recommendations[currentIndex]?.song_name} by{" "}
+                  {DiscofyResponse.recommendations[currentIndex]?.artist}.
+                </h1>
+                <p className="mt-1 text-zinc-400">
+                  Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
+                </p>
+                
+                <div className="flex justify-center gap-4 mt-1">
+                  <Button
+                    onClick={() => setCurrentIndex((prev) => prev - 1)}
+                    disabled={currentIndex === 0}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={() => setCurrentIndex((prev) => prev + 1)}
+                    disabled={currentIndex === DiscofyResponse.recommendations.length - 1}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </Modal>
       )}
