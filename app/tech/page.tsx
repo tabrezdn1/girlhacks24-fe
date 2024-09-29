@@ -15,12 +15,12 @@ export default function Home() {
         </div>
         <div className="grid place-items-center absolute ml-auto mr-auto left-0 right-0 text-center py-12">
           <div className="w-max text-center flex flex-col gap-8 items-center text-zinc-900">
-            <h1 className="text-7xl font-bold flex flex-col">
-            This is tech
-              <span className="text-xl">
-                List of tech
-              </span>
+            <h1 className="text-7xl font-bold flex flex-col discofy">
+              This is tech
             </h1>
+            <span className="text-xl">
+              List of tech
+            </span>
           </div>
         </div>
         <div />

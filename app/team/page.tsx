@@ -17,12 +17,12 @@ export default function Home() {
         </div>
         <div className="grid place-items-center absolute ml-auto mr-auto left-0 right-0 text-center py-12">
           <div className="w-max text-center flex flex-col gap-8 items-center text-zinc-900">
-            <h1 className="text-7xl font-bold flex flex-col">
+            <h1 className="text-7xl font-bold flex flex-col discofy">
             👾 Meet the Dream Team Behind Discofy! 👾
+            </h1>
             <span className="text-xl">
             Behind every great app, there’s a team of passionate creators — and Discofy is no exception. Here’s the squad making sure the disco never dies:
               </span>
-            </h1>
             <TeamMembers />
           </div>
         </div>
