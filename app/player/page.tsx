@@ -8,6 +8,17 @@ import logo from '@/public/girlhack24-icon.png'
 import { MusicNoteAdd } from 'iconoir-react'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import adp from '@/public/adp.webp'
+import avande from '@/public/AVANADE.webp'
+import aws from '@/public/aws.webp'
+import crowd from '@/public/crowd.webp'
+import fiserv from '@/public/fiserv.webp'
+import github from '@/public/github.png'
+import hexaware from '@/public/hexaware.webp'
+import isaca from '@/public/isaca.png'
+import merck from '@/public/merck.webp'
+import mongodb from '@/public/mongodb.webp'
+import nokia from '@/public/nokia.webp'
 
 function initDiscoBall() {
   var t = 1;
@@ -107,17 +118,95 @@ export default function Player() {
         <article className="w-full h-80 bg-black text-white grid grid-cols-2 px-8 place-items-center rounded-[10px] customShadowHigh relative">
           <div className="flex flex-col gap-2">
             <h1 className="flex font-medium text-2xl">
-              Welcome to Discofy
-              <MusicNoteAdd />
+              All about us
             </h1>
-            <p className="opacity-70 text-sm">A project submitted at GirlHacks 2024 held at New Jersey Institute of Technology</p>
+            <ul>
+              <li>
+                🎧 AI-Powered Music Recommendations
+              </li><li>
+                📻 Integrated Music Player to share Playlists & Discover New Artists
+              </li>
+              <li>
+                🔥 Analytics for the Curious
+              </li>
+            </ul>
+            A project submitted at GirlHacks 2024 held at New Jersey Institute of Technology
+            <p className="opacity-70 text-sm">Special thanks to all the sponsors for the support!</p>
+            <div className="flex items-center gap-4">
+              <Image
+                src={aws}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={adp}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={github}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={avande}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={crowd}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={fiserv}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+
+              <Image
+                src={hexaware}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={isaca}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={merck}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={mongodb}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+              <Image
+                src={nokia}
+                width={40}
+                height={20}
+                alt="aws"
+              />
+            </div>
           </div>
           <Image
             width={420}
             height={420}
             src={logo}
             alt="Banner"
-            className="absolute right-4 bottom-0"
           />
         </article>
         <div className="flex items-center justify-between gap-8">

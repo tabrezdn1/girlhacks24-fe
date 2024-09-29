@@ -16,28 +16,27 @@ export default function Navbar({ email }: NavProps) {
         >
           Tech Stack
         </Link>
-
+        <Link
+          href="/team"
+          className="text-zinc-900 w-max px-10 py-3 hover:bg-zinc-900/5 active:translate-y-0.5 active:bg-zinc-900/10 outline-none rounded-md font-semibold transition-all duration-200"
+        >
+          Meet the team
+        </Link>
         {email ? (
           <Link
-            className="text-zinc-900 w-max px-10 py-3 hover:bg-zinc-900/5 active:translate-y-0.5 active:bg-zinc-900/10 outline-none rounded-md font-semibold transition-all duration-200"
+            className="w-max px-10 py-3 bg-zinc-900 hover:bg-zinc-900/90 active:translate-y-0.5 active:bg-black outline-none customShadowMedium text-white rounded-md font-semibold transition-all duration-200"
             href="/api/auth/logout"
           >
             Logout
           </Link>
         ) : (
           <Link
-            className="text-zinc-900 w-max px-10 py-3 hover:bg-zinc-900/5 active:translate-y-0.5 active:bg-zinc-900/10 outline-none rounded-md font-semibold transition-all duration-200"
+            className="w-max px-10 py-3 bg-zinc-900 hover:bg-zinc-900/90 active:translate-y-0.5 active:bg-black outline-none customShadowMedium text-white rounded-md font-semibold transition-all duration-200"
             href="/api/auth/login"
           >
             Login
           </Link>
         )}
-        <Link
-          href="/team"
-          className="w-max px-10 py-3 bg-zinc-900 hover:bg-zinc-900/90 active:translate-y-0.5 active:bg-black outline-none customShadowMedium text-white rounded-md font-semibold transition-all duration-200"
-        >
-          Meet the team
-        </Link>
       </div>
     </header>
   );

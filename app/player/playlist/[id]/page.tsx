@@ -85,7 +85,7 @@ export default function Player() {
             <h1 className="text-xl font-bold flex flex-col">
               {decodeURI(selectedPlaylist?.name || '')}
               <span className="text-xs">
-                2018 • {selectedPlaylist?.tracks.total} songs • 1 hr 8 min
+                {selectedPlaylist?.tracks.total} songs • Followers {selectedPlaylist?.followers.total}
               </span>
             </h1>
             <LikeButton />

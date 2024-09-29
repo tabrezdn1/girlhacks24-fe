@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import YouTube from "react-youtube";
 import { Spotify } from "react-spotify-embed";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./ui/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/ui/select";
 import { Button } from "./ui/ui/button";
-
+import loader from "../../public/loading.gif"
+import Image from 'next/image'
 interface ModalContentProps {
   isModalOpen: boolean;
   close: () => void;
@@ -124,7 +125,7 @@ export default function ModalContent({ isModalOpen, close }: ModalContentProps) 
               <div className="flex flex-col gap-2">
                 <h1 className="text-4xl font-bold">Hi, I am DiscoGPT</h1>
                 <h1 className="text-zinc-100">
-                  I am your personal music assistant. I can help you find the right music for your mood.
+                  I am your personal music assistant with Discofy. I can help you find the right music for your mood.
                 </h1>
               </div>
             </div>
@@ -214,6 +215,13 @@ export default function ModalContent({ isModalOpen, close }: ModalContentProps) 
                 </motion.div>
               )}
             </AnimatePresence>
+            {isLoading ? (<Image
+              src={loader}
+              width="300"
+              height="200"
+              alt="Loader"
+              className="rounded-[5%] object-cover flex-shrink-0 z-100"
+            />) : null}
             {error && (
               <div className="mt-1 text-red-500">
                 <p>Error: {error}</p>
@@ -231,7 +239,6 @@ export default function ModalContent({ isModalOpen, close }: ModalContentProps) 
                 <p className="mt-1 text-zinc-400">
                   Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
                 </p>
-                
                 <div className="flex justify-center gap-4 mt-1">
                   <Button
                     onClick={() => setCurrentIndex((prev) => prev - 1)}

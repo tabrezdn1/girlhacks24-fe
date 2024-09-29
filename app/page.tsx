@@ -23,11 +23,10 @@ export default async function Home() {
         <div className="grid place-items-center absolute ml-auto mr-auto left-0 right-0 text-center py-12">
           <div className="w-max text-center flex flex-col gap-8 items-center text-zinc-900">
             <h1 className="text-7xl font-bold flex flex-col discofy">
-              Get lost in the music 🪩
+            🪩 🎶 Discover, Dance, Disco! 🎶 🪩
             </h1>
             <span className="text-xl">
-              - Meet Vibey, get vibified with personal recommendations and start
-              streaming on our web player today.
+            Ready to turn up the funk and feel the groove? Discofy is your new go-to app for all things disco—bringing the best of retro beats with a futuristic twist!
             </span>
             <Link
               href="/player"
