@@ -55,7 +55,7 @@ export default function ModalContent({ isModalOpen, close }: ModalContentProps) 
     if (isLoading) return;
 
     setIsLoading(true);
-    const url = "https://909e-128-235-159-74.ngrok-free.app/process-song";
+    const url = "http://app.discofy.us:8000/process-song";
     const input = `I am looking for a song that is ${mood} with a ${tempo} tempo, focusing on ${lyricalFocus} lyrics, and has ${energyLevel} energy.`;
     const data = { input };
 
