@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import YouTube from "react-youtube";
 import { Spotify } from "react-spotify-embed";
+
 interface ModalContentProps {
   isModalOpen: boolean;
   close: () => void;
@@ -15,39 +16,21 @@ const variants = {
   enter: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -10 },
 };
-interface AIresponse {
-  greeting: string;
-  recommendations: {
-    song_name: string;
-    artist: string;
-    youtube_link: string;
-    spotify_link: string;
-  }[];
+
+interface Recommendation {
+  song_name: string;
+  artist: string;
+  youtube_link: string;
+  spotify_link: string;
+  album: string;
+  language: string;
+  release_year: number;
 }
 
-// {
-//   "greeting": "Hi there! Feeling like dancing but need a little motivation boost? I've got you covered!",
-//   "recommendations": [
-//     {
-//       "song_name": "Stayin' Alive",
-//       "artist": "Bee Gees",
-//       "youtube_link": "https://www.youtube.com/watch?v=z2qoihbzc3E",
-//       "spotify_link": "https://open.spotify.com/track/4UDmDIqJIbrW0hMBQMFOsM"
-//     },
-//     {
-//       "song_name": "Le Freak",
-//       "artist": "Chic",
-//       "youtube_link": "https://www.youtube.com/watch?v=yx0Po0clElc",
-//       "spotify_link": "https://open.spotify.com/track/5qP7ep6x1hWZNqiGSYfMNc"
-//     },
-//     {
-//       "song_name": "I Will Survive",
-//       "artist": "Gloria Gaynor",
-//       "youtube_link": "https://www.youtube.com/watch?v=6dYWe1c3OyU",
-//       "spotify_link": "https://open.spotify.com/album/77n9CO1gHYQDazdANnyStg"
-//     }
-//   ]
-// }
+interface AIresponse {
+  greeting: string;
+  recommendations: Recommendation[];
+}
 
 export default function ModalContent({
   isModalOpen,
@@ -57,15 +40,18 @@ export default function ModalContent({
   const [isTyping, setIsTyping] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
-  const [DiscofyResponse, setDicsofyResponse] = useState<AIresponse>(null);
+  const [DiscofyResponse, setDicsofyResponse] = useState<AIresponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAIResponse, setShowAIResponse] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0); // New state for current index
 
   const getSuggestions = async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
     const url = "https://909e-128-235-159-74.ngrok-free.app/process-song";
-    const data = {
-      input,
-    };
+    const data = { input };
 
     try {
       const response = await fetch(url, {
@@ -80,15 +66,19 @@ export default function ModalContent({
         throw new Error("Network response not ok");
       }
 
-      const result = await response.json();
+      const result: AIresponse = await response.json();
+      console.log(`returned result: ${JSON.stringify(result)}`);
       setDicsofyResponse(result);
       setShowAIResponse(true);
+      setCurrentIndex(0); // Reset index when new data is fetched
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
         setError("An unknown error occurred");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,6 +88,10 @@ export default function ModalContent({
 
   const handleClearInput = () => {
     setInput("");
+    setDicsofyResponse(null);
+    setShowAIResponse(false);
+    setError(null);
+    setCurrentIndex(0); // Reset index when input is cleared
     if (ref.current) {
       ref.current.value = "";
     }
@@ -116,12 +110,10 @@ export default function ModalContent({
   }, [input]);
 
   const videoOnReady = (event: any) => {
-    // access to player in all event handlers via event.target
     event.target.pauseVideo();
   };
 
   const playVideo = (event: any) => {
-    // access to player in all event handlers via event.target
     console.log("Discofy video player started");
   };
 
@@ -129,7 +121,6 @@ export default function ModalContent({
     height: "400",
     width: "100%",
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
       allowFullscreen: true,
     },
@@ -139,28 +130,28 @@ export default function ModalContent({
     <AnimatePresence mode="wait" initial={false}>
       {isModalOpen && (
         <Modal handleClose={close}>
-          <div className="flex flex-col gap-4 w-full items-center">
+          <div className="flex flex-col items-center w-full gap-4">
             <div className="flex flex-col items-center justify-between gap-8 p-8 w-full rounded-[10px] relative">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-4">
-                  <h1 className="font-bold text-4xl">Hi, I am DiscoGPT</h1>
+                  <h1 className="text-4xl font-bold">Hi, I am DiscoGPT</h1>
                   <h1 className="text-zinc-100">
-                    I am, your personal music assistant. I can help you find the
+                    I am your personal music assistant. I can help you find the
                     right music for your mood.
                   </h1>
                 </div>
               </div>
             </div>
-            <div className="relative mt-8">
+            <div className="relative w-full mt-8 md:w-96">
               <input
                 autoFocus={true}
                 onChange={handleChange}
-                placeholder="How you feeling today?"
+                placeholder="How are you feeling today?"
                 ref={ref}
-                className="w-full md:w-96 h-12 px-3 shados rounded-[10px] border-2 dark:border-black hover:border-black/40  active:shadow-none focus:border-black/40 hover:bg-gray-100 dark:bg-[#212121] transition duration-300 focus:outline-none input"
+                className="w-full h-12 px-3 shadow rounded-[10px] border-2 dark:border-black hover:border-black/40 active:shadow-none focus:border-black/40 hover:bg-gray-100 dark:bg-[#212121] transition duration-300 focus:outline-none input"
               />
               <div className="flex items-center absolute right-[10px] top-3">
-                {input !== "" ? (
+                {input !== "" && (
                   <button
                     onClick={() => {
                       handleClearInput();
@@ -169,65 +160,101 @@ export default function ModalContent({
                   >
                     <Cancel className="text-gray-500" />
                   </button>
-                ) : null}
+                )}
 
-                <button>
-                  <Search className="text-gray-500" onClick={getSuggestions} />
+                <button
+                  onClick={getSuggestions}
+                  disabled={isLoading}
+                  className={`ml-2 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <Search className="text-gray-500" />
                 </button>
               </div>
 
-              {showAIResponse ? (
+              {showAIResponse && DiscofyResponse && (
                 <>
-                  <h1 className="text-zinc-100">
-                    {DiscofyResponse?.greeting || null}
+                  <h1 className="mt-4 text-zinc-100">
+                    {DiscofyResponse.greeting}
                   </h1>
                   <h1 className="text-zinc-100">
-                    Here's a song from{" "}
-                    {DiscofyResponse?.recommendations[0]?.song_name} by{" "}
-                    {DiscofyResponse?.recommendations[0]?.artist}.
+                    Here's a song from {DiscofyResponse.recommendations[currentIndex]?.song_name} by{" "}
+                    {DiscofyResponse.recommendations[currentIndex]?.artist}.
                   </h1>
+                  <p className="mt-2 text-zinc-400">
+                    Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
+                  </p>
+                  
+                  {/* Navigation Buttons */}
+                  <div className="flex justify-center gap-4 mt-4">
+                    <button
+                      onClick={() => setCurrentIndex((prev) => prev - 1)}
+                      disabled={currentIndex === 0}
+                      className={`px-4 py-2 rounded ${
+                        currentIndex === 0
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setCurrentIndex((prev) => prev + 1)}
+                      disabled={currentIndex === DiscofyResponse.recommendations.length - 1}
+                      className={`px-4 py-2 rounded ${
+                        currentIndex === DiscofyResponse.recommendations.length - 1
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </>
-              ) : null}
+              )}
             </div>
             <AnimatePresence mode="wait">
-              {isTyping && showAIResponse ? (
+              {isTyping && showAIResponse && DiscofyResponse && (
                 <motion.div
                   variants={variants}
                   initial="hidden"
                   animate="enter"
                   exit="exit"
-                  className="bg-white dark:bg-black w-full h-full rounded-[10px] customShadowMedium relative p-5 "
+                  className="bg-white dark:bg-black w-full md:w-96 h-full rounded-[10px] customShadowMedium relative p-5 mt-4"
                 >
                   <YouTube
-                    className="bg-white dark:bg-black w-full h-full"
+                    className="w-full h-64 bg-white dark:bg-black"
                     videoId={
-                      DiscofyResponse?.recommendations[0]?.youtube_link
+                      DiscofyResponse.recommendations[currentIndex]?.youtube_link
                         ?.split("v=")[1]
-                        ?.split("&")[0] || null
+                        ?.split("&")[0] || ""
                     }
                     opts={opts}
-                    styles={opts}
                     onReady={videoOnReady}
-                    onPlay={(e: any) => playVideo(e)}
+                    onPlay={playVideo}
                   />
-                  <div className="flex flex-row pl-9">
+                  <div className="flex flex-row mt-4 pl-9">
                     <Spotify
                       className="p-3"
-                      link={DiscofyResponse?.recommendations[0]?.spotify_link}
+                      link={DiscofyResponse.recommendations[currentIndex]?.spotify_link}
                     />
-
-                    {/* <Spotify className="p-3" link="https://open.spotify.com/album/4yP0hdKOZPNshxUOjY0cZj" /> */}
                   </div>
                   <Cancel
                     onClick={() => {
                       close();
                       handleClearInput();
                     }}
-                    className="absolute top-4 right-4 cursor-pointer"
+                    className="absolute cursor-pointer top-4 right-4"
                   />
                 </motion.div>
-              ) : null}
+              )}
             </AnimatePresence>
+            {error && (
+              <div className="mt-4 text-red-500">
+                <p>Error: {error}</p>
+              </div>
+            )}
           </div>
         </Modal>
       )}
