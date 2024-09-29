@@ -42,7 +42,7 @@
   margin-left: -50px;
   -webkit-animation: rotateDiscoBall 18s linear infinite;
   animation: rotateDiscoBall 18s linear infinite;
-  z-index: 100;
+  z-index: 20;
 }
 
 #discoBallLight {

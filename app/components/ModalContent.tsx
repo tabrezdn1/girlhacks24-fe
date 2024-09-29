@@ -121,7 +121,7 @@ export default function ModalContent({
     height: "400",
     width: "100%",
     playerVars: {
-      autoplay: 1,
+      autoplay: 0,
       allowFullscreen: true,
     },
   };
@@ -130,8 +130,8 @@ export default function ModalContent({
     <AnimatePresence mode="wait" initial={false}>
       {isModalOpen && (
         <Modal handleClose={close}>
-          <div className="flex flex-col items-center w-full gap-4">
-            <div className="flex flex-col items-center justify-between gap-8 p-8 w-full rounded-[10px] relative">
+          <div className="flex flex-col items-center w-full gap-4 z-50">
+            <div className="flex flex-col items-center justify-between gap-8 p-2 w-full rounded-[10px] relative">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-4">
                   <h1 className="text-4xl font-bold">Hi, I am DiscoGPT</h1>
@@ -142,7 +142,7 @@ export default function ModalContent({
                 </div>
               </div>
             </div>
-            <div className="relative w-full mt-8 md:w-96">
+            <div className="relative w-full">
               <input
                 autoFocus={true}
                 onChange={handleChange}
@@ -173,46 +173,7 @@ export default function ModalContent({
                 </button>
               </div>
 
-              {showAIResponse && DiscofyResponse && (
-                <>
-                  <h1 className="mt-4 text-zinc-100">
-                    {DiscofyResponse.greeting}
-                  </h1>
-                  <h1 className="text-zinc-100">
-                    Here's a song from {DiscofyResponse.recommendations[currentIndex]?.song_name} by{" "}
-                    {DiscofyResponse.recommendations[currentIndex]?.artist}.
-                  </h1>
-                  <p className="mt-2 text-zinc-400">
-                    Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
-                  </p>
-                  
-                  {/* Navigation Buttons */}
-                  <div className="flex justify-center gap-4 mt-4">
-                    <button
-                      onClick={() => setCurrentIndex((prev) => prev - 1)}
-                      disabled={currentIndex === 0}
-                      className={`px-4 py-2 rounded ${
-                        currentIndex === 0
-                          ? "bg-gray-300 cursor-not-allowed"
-                          : "bg-blue-500 text-white hover:bg-blue-600"
-                      }`}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => setCurrentIndex((prev) => prev + 1)}
-                      disabled={currentIndex === DiscofyResponse.recommendations.length - 1}
-                      className={`px-4 py-2 rounded ${
-                        currentIndex === DiscofyResponse.recommendations.length - 1
-                          ? "bg-gray-300 cursor-not-allowed"
-                          : "bg-blue-500 text-white hover:bg-blue-600"
-                      }`}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </>
-              )}
+              
             </div>
             <AnimatePresence mode="wait">
               {isTyping && showAIResponse && DiscofyResponse && (
@@ -221,7 +182,7 @@ export default function ModalContent({
                   initial="hidden"
                   animate="enter"
                   exit="exit"
-                  className="bg-white dark:bg-black w-full md:w-96 h-full rounded-[10px] customShadowMedium relative p-5 mt-4"
+                  className="bg-white dark:bg-black w-full h-full rounded-[10px] customShadowMedium relative p-2"
                 >
                   <YouTube
                     className="w-full h-64 bg-white dark:bg-black"
@@ -234,9 +195,8 @@ export default function ModalContent({
                     onReady={videoOnReady}
                     onPlay={playVideo}
                   />
-                  <div className="flex flex-row mt-4 pl-9">
+                  <div className="flex flex-row p-2">
                     <Spotify
-                      className="p-3"
                       link={DiscofyResponse.recommendations[currentIndex]?.spotify_link}
                     />
                   </div>
@@ -251,10 +211,50 @@ export default function ModalContent({
               )}
             </AnimatePresence>
             {error && (
-              <div className="mt-4 text-red-500">
+              <div className="mt-1 text-red-500">
                 <p>Error: {error}</p>
               </div>
             )}
+            {showAIResponse && DiscofyResponse && (
+                <>
+                  <h1 className="mt-1 text-zinc-100">
+                    {DiscofyResponse.greeting}
+                  </h1>
+                  <h1 className="text-zinc-100">
+                    Here's a song from {DiscofyResponse.recommendations[currentIndex]?.song_name} by{" "}
+                    {DiscofyResponse.recommendations[currentIndex]?.artist}.
+                  </h1>
+                  <p className="mt-1 text-zinc-400">
+                    Recommendation {currentIndex + 1} of {DiscofyResponse.recommendations.length}
+                  </p>
+                  
+                  {/* Navigation Buttons */}
+                  <div className="flex justify-center gap-4 mt-1">
+                    <button
+                      onClick={() => setCurrentIndex((prev) => prev - 1)}
+                      disabled={currentIndex === 0}
+                      className={`px-1 py-1 rounded ${
+                        currentIndex === 0
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setCurrentIndex((prev) => prev + 1)}
+                      disabled={currentIndex === DiscofyResponse.recommendations.length - 1}
+                      className={`px-1 py-1 rounded ${
+                        currentIndex === DiscofyResponse.recommendations.length - 1
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
+              )}
           </div>
         </Modal>
       )}

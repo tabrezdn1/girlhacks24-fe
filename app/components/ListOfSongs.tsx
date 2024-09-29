@@ -1,11 +1,14 @@
 'use client'
 import { Pause, Play } from 'iconoir-react'
+import { usePathname } from 'next/navigation'
 import { Song } from '../lib/api-response'
 import ContextMenu from './ContextMenu'
 import { useAudioContext } from '../context/appState'
 import { useEffect, useRef, useState } from 'react'
 
 export default function ListOfSongs() {
+  const pathname = usePathname()
+  const value = pathname.split('/').pop()
   const {
     pause,
     handlePlaySong,
@@ -27,7 +30,8 @@ export default function ListOfSongs() {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         const data: any = await response.json();
-        setSongs(data);
+        const songsForPlaylist = data.filter((d:any) => d.playlist_id === value)
+        setSongs(songsForPlaylist);
       } catch (err: any) {
         console.log(err)
       }
