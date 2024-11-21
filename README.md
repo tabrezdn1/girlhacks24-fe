@@ -1,5 +1,8 @@
 # Discofy
 
+## DEMO
+![demo](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/051/070/datas/original.gif)
+
 ## Inspiration
 Leveraging Large Language Models (LLMs) to enhance music discovery and playlist curation by understanding user moods and preferences.
 
